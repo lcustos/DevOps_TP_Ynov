@@ -111,3 +111,64 @@ Inconvénients :
 
 Pour chaque modification du fichier, l'image doit être reconstruite et le container redémarré. Moins pratique pour le développement rapide car cela implique un cycle de reconstruction.
 
+## V/ Utiliser une base de données dans un container docker
+
+### a) Récuperer les images mysql (ou mariaDb) et phpmyadmin/phpymyadmin depuis le docker hub
+
+```
+docker pull mysql
+docker pull phpmyadmin
+```
+
+## b) Lancer 2 container à partir des images
+
+```
+$ docker run --name mysql -d -e MYSQL_ROOT_PASSWORD=root --resta
+rt unless-stopped mysql
+$ docker run --name phpmyadmin -d -p 80:80 -e PMA_HOST=mysql phpmyadmin
+
+$ docker network create my-network
+$ docker network connect my-network mysql
+$ docker network connect my-network phpmyadmin
+```
+
+## VI/ Utilisation de docker-compose.yml
+
+### a) Allez lire le document de docker-compose et essayer de decrire à quoi sert cette commande VS la commande docker run.
+
+Docker run est entièrement basé sur la ligne de commande, tandis que docker-compose lit les données de configuration à partir d'un fichier YAML. La deuxième différence majeure est que docker run ne peut démarrer qu'un conteneur à la fois, tandis que docker-compose configurera et exécutera plusieurs conteneurs.
+
+### b)Quelle commande permet de lancer tous les containers du fichier yml ? Quelle commande permet de les stopper ?
+```
+ docker-compose up -d
+
+ docker-compose stop
+```
+
+### c) Ecrivez un fichier docker-compose.yml pour servir votre base de données (mysql, mariadb, etc.) ET phpmyadmin
+
+```
+version: "3.9"
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "super-secret-password"
+    volumes:
+      - dbData:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    restart: always
+    ports:
+      - 80:80
+volumes:
+  dbData:
+```
+
+
+
+
+
