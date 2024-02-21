@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    expose:
+      - ${MYSQL_PORT}
+    networks:
+          - network
+  node:
+    depends_on:
+      - mysql
+    build:
+       context: .
+       dockerfile: dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - ${NODE_PORT}:${NODE_PORT}
+    networks:
+        - network
+networks:
+    network:
+        driver: bridge
+volumes:
+  db:
