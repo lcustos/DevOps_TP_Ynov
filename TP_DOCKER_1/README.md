@@ -131,6 +131,12 @@ $ docker network create my-network
 $ docker network connect my-network mysql
 $ docker network connect my-network phpmyadmin
 ```
+Pour créer une table via l'interface il faut se connecter avec les identifiants suivants :
+```
+root
+root
+```
+Ensuite on crée une base de donnée et une table.
 
 ## VI/ Utilisation de docker-compose.yml
 
